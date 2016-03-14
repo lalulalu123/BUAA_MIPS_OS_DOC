@@ -1,6 +1,7 @@
-#哈哈#
-14231027 赵岳
-## Welcome to MarkdownPad 2 ##
+#<center>哈哈FirstBlood#
+<center>14231027 赵岳
+</center>
+## Welcome to MarkdownPad 2 goodgood##
 
 **MarkdownPad** is a full-featured Markdown editor for Windows.
 
