@@ -1,8 +1,8 @@
-#lab4实验报告
+# lab4实验报告
 赵岳
 14231027
-####Exercise 4.1 
-#####填写 msyscall，使得系统调用机制可以正常工作。 
+#### Exercise 4.1 
+##### 填写 msyscall，使得系统调用机制可以正常工作。 
 
 	   move v0,a0
 	   sw a0,0(sp)
