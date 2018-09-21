@@ -13,8 +13,8 @@
 	   jr ra
 
 mysyscall主要完成的功能是，设置syscall的各种参数，包括系统调用号（传入v0），和其他参数。由于寄存器的个数限制，只是将a0~a3四个参数使用寄存器进行传递，其余的参数使用栈传递。因此，结合注释，不难写出如上代码。值得注意的是，始终需要记得填写.s汇编函数时，要使用jr ra返回。
-####Exercise 4.2 
-#####实现 lib/syscall\_all.c 中的 void sys\_ipc\_recv(int sysno,u\_int dstva) 函数和 int sys\_ipc\_can\_send(int sysno,u\_int envid, u\_int value, u\_int srcva, u\_int perm) 函数。 
+#### Exercise 4.2 
+##### 实现 lib/syscall\_all.c 中的 void sys\_ipc\_recv(int sysno,u\_int dstva) 函数和 int sys\_ipc\_can\_send(int sysno,u\_int envid, u\_int value, u\_int srcva, u\_int perm) 函数。 
 
     void sys_ipc_recv(int sysno,u_int dstva)
 	{
@@ -96,20 +96,20 @@ mysyscall主要完成的功能是，设置syscall的各种参数，包括系统�
 这个函数是作用是：传入一个 envid，然后函数会把 envid 所对应的 env 结构体的指针存在传入的 penv参数中。如果出错会返回 -E\_BAD\_ENV。
 那么至此，我们就相对清楚了该函数的作用。我们在ipc_send函数中，我们将&target作为调用该函数的第二个参数，envid作为第一个参数。这里，由于没有看懂checkperm的机制，因此我们直接跳过了checkperm这一阶段，将0传入。最后，我们将该函数的错误返回值作为调用该函数时的错误返回值即可。
 至此，进程通信部分已经完成。
-####Thinking 4.1 
-#####思考下面的问题，并对这两个问题谈谈你的理解：
-#####• 子进程完全按照 fork() 之后父进程的代码执行，说明了什么？
-#####• 但是子进程却没有执行 fork() 之前父进程的代码，又说明了什么？
+#### Thinking 4.1 
+##### 思考下面的问题，并对这两个问题谈谈你的理解：
+##### • 子进程完全按照 fork() 之后父进程的代码执行，说明了什么？
+##### • 但是子进程却没有执行 fork() 之前父进程的代码，又说明了什么？
 子进程完全按照父进程fork之后的代码执行，说明子进程的代码段和父进程的代码段是一致的。他们是同一个程序，只不过是两个不同的进程。然而子进程是“半路杀出”，从一半开始执行，说明子进程虽然和父进程代码一样，可是开始的位置却不同。具体一点，子进程执行的代码的起始位置应该是父进程的epc。这一点在我们的代码中也有体现：`child->env_tf.pc = child->env_tf.cp0_epc;`。
-####Thinking 4.2 
-#####关于 fork 函数的两个返回值，下面说法正确的是： 
-#####A、fork 在父进程中被调用两次，产生两个返回值 
-#####B、fork 在两个进程中分别被调用一次，产生两个不同的返回值 
-#####C、fork 只在父进程中被调用了一次，在两个进程中各产生一个返回值 
-#####D、fork 只在子进程中被调用了一次，在两个进程中各产生一个返回值
+#### Thinking 4.2 
+##### 关于 fork 函数的两个返回值，下面说法正确的是： 
+##### A、fork 在父进程中被调用两次，产生两个返回值 
+##### B、fork 在两个进程中分别被调用一次，产生两个不同的返回值 
+##### C、fork 只在父进程中被调用了一次，在两个进程中各产生一个返回值 
+##### D、fork 只在子进程中被调用了一次，在两个进程中各产生一个返回值
 C.
-####Exercise 4.3 
-#####填写./lib/syscall_all.c 中的函数 sys\_env\_alloc，可以不填返回值。 
+#### Exercise 4.3 
+##### 填写./lib/syscall_all.c 中的函数 sys\_env\_alloc，可以不填返回值。 
 
     int sys_env_alloc(void)
 	{
@@ -130,11 +130,11 @@ C.
 4.在将父进程的运行环境拷贝到子进程后，还需要调整一些东西，首先，使得子进程的调用返回0。由于返回值v0是2号寄存器，因此我们还需要一句`child->env_tf.regs[2] = 0`。
 5.根据实验前的父子进程fork小实验，我们知道子进程是从父进程fork它的地方继续执行，而不是代码的开头。因此我们要在创建子进程时的pc置为父进程的epc，因此我们需要`child->env_tf.pc = child->env_tf.cp0_epc;`
 6.父子进程在fork函数中`envid = sys_env_alloc()`后便“分道扬镳”了，那么我们设置了子进程的返回值为0后，我们还需要管一下父进程。为了区别父子进程，将父进程的返回值设置为子进程的env_id。
-####Exercise 4.4 
-#####补充./lib/syscall\_all.c 中的函数 sys\_env\_alloc 的返回值。
+#### Exercise 4.4 
+##### 补充./lib/syscall\_all.c 中的函数 sys\_env\_alloc 的返回值。
 如上，不再赘述。
-####Exercise 4.5 
-#####补充./user/fork.c 中的函数 fork 中关于 sys\_env\_alloc 的部分和“子进程”执行的部分。 
+#### Exercise 4.5 
+##### 补充./user/fork.c 中的函数 fork 中关于 sys\_env\_alloc 的部分和“子进程”执行的部分。 
 
     int fork(void)
 	{
@@ -169,11 +169,11 @@ C.
 这里有一些问题需要注意，首先，我们一再强调了fork是用户态下的函数，那么我们就只能利用大量提供的syscall_x函数来进行一些参数的设置。由于这些syscall函数都是int类型的，所以再调用时进行了一步判断，如果调用错误就会进入user\_panic（由于用户态，不能使用panic）,方便调试错误。
 还有一个非常关键的问题，，我们需要将 \_asm\_pgfault\_handler 设置为子进程的页中断函数入口。我们知道，\_asm\_pgfault\_handler 函数(这是一个汇编函数)将出错的地址提取了出来，并作为参数传递给 pgfault 。也就是说，如果我们将子进程的页中断函数设置为pgfault，那么页中断时，就会直接进入 pgfault 函数。这样的结果就是：从cp0中提取出错的虚地 址，恢复寄存器等工作就没代码来做了。所以，我们需要将\_asm\_pgfault\_handler 设置为子 进程的页中断处理函数。
 在后来和其他同学的讨论中，发现错误栈的申请和映射工作可以放在sys\_env\_alloc函数中进行。但在这里，为了和lab3中env\_alloc函数的对应关系，在sys\_env\_alloc只进行了进程控制块的申请工作，其余fork的额外工作全部在fork函数中实现。
-####Thinking 4.3 
-#####如果仔细阅读上述这一段话, 你应该可以发现, 我们并不是对所有的用户空间页都使用 duppage 进行了保护。那么究竟哪些用户空间页可以保护，哪些不可以呢，请结合 include/mmu.h 里的内存布局图谈谈你的看法。 
+#### Thinking 4.3 
+##### 如果仔细阅读上述这一段话, 你应该可以发现, 我们并不是对所有的用户空间页都使用 duppage 进行了保护。那么究竟哪些用户空间页可以保护，哪些不可以呢，请结合 include/mmu.h 里的内存布局图谈谈你的看法。 
 根据mmu.h中的内存布局，我们可以看到，UTOP是用户空间的极限，duppage肯定为比UTOP小的地址空间服务。其次，我们还注意到，UTOP也叫UXSTACKTOP （`#define UXSTACKTOP (UTOP)`）它的下面一页是 exception stack，每个进程的异常栈都是我们单独处理的，因此我认为这一页也不需要duppage。综上，duppage保护的页应该是截至到(UTOP/BY2PG-1)这一页。
-####Exercise 4.6 
-#####结合注释，补充 user/fork.c 中的函数 duppage。 
+#### Exercise 4.6 
+##### 结合注释，补充 user/fork.c 中的函数 duppage。 
 
     static void duppage(u_int envid, u_int pn)
 	{
@@ -214,8 +214,8 @@ C.
 	。。。。。。
 	}
 至此，duppage函数就完成了	
-####Exercise 4.7 
-#####结合注释，补充 user/fork.c 中的函数 pgfault。 
+#### Exercise 4.7 
+##### 结合注释，补充 user/fork.c 中的函数 pgfault。 
 	static void
 	pgfault(u_int va)
 	{
@@ -238,10 +238,10 @@ C.
 	}
 像前两个函数一样，这个函数还是运行在用户空间的，这对我们函数的实现造成了很大的阻碍。好在丰富的系统调用给了我们足够多的工具。
 步骤大致如下：首先判断该虚拟地址对应的页是否是COW的，不是得话则panic一个error(由于用户态，还是需要使用user\_panic函数)。然后，在PFTEMP位置申请一个新的物理页，将va这里的页拷贝到这个临时物理页上，最后，把临时位置映射的的物理页映射到va上，并且解除临时位置对内存页的映射。
-####Thinking 4.4 
-#####请结合代码与示意图, 回答以下两个问题： 
-#####1、vpt 和 vpd 宏的作用是什么, 如何使用它们？ 
-#####2、它们出现的背景是什么? 如果让你在 lab2 中要实现同样的功能, 可以怎么写？   
+#### Thinking 4.4 
+##### 请结合代码与示意图, 回答以下两个问题： 
+##### 1、vpt 和 vpd 宏的作用是什么, 如何使用它们？ 
+##### 2、它们出现的背景是什么? 如果让你在 lab2 中要实现同样的功能, 可以怎么写？   
 
 1.首先，在mmu.h中，我们可以找到如下定义：
 
