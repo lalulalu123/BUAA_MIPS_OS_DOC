@@ -120,7 +120,7 @@ Linux中并不是所有的系统调用都是原子操作，例如write系统调�
 	return 0;
 	}
 ### 阶段性现象
-![Alt text](./捕7获.JPG)
+![Alt text](./7.JPG)
 至此，pipe和竞争测试已经成功完成，下来完成shell部分。
 ### Exercise 6.5 
 ##### 模仿现有的系统调用，增加系统调用syscall_cgetc。(提示:sys_cgetc函数不需要传入参数)
@@ -156,4 +156,4 @@ Linux中并不是所有的系统调用都是原子操作，例如write系统调�
 
 ### 实验现象与总结			
 Lab6还有许多不完美的地方，还需继续加深理解，调试！
-![Alt text](./捕6获.JPG)
+![Alt text](./lab6.JPG)
